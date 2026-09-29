@@ -1,0 +1,9 @@
+docs/
+frontend/node_modules/
+node_modules/
+*.gif
+*.webm
+*.mp4
+*.png
+.venv/
+__pycache__/

@@ -47,18 +47,19 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-RESOURCE = os.environ["AGENT_ENGINE_RESOURCE_NAME"]
-# The agent's app directory (matches agent_directory in agents-cli-manifest.yaml).
+RESOURCE = os.environ.get("AGENT_ENGINE_RESOURCE_NAME", "")
+AGENT_URL = os.environ.get("AGENT_URL", "https://travel-concierge-1043598016361.us-east1.run.app/a2a/app")
 AGENT_DIRECTORY = os.environ.get("AGENT_DIRECTORY", "app")
-# Location is embedded in the resource name: projects/<p>/locations/<loc>/reasoningEngines/<id>.
-LOCATION = RESOURCE.split("/locations/")[1].split("/")[0]
 
-# A2A endpoint for an Agent Runtime deployment, via the Agent Engine HTTP
-# passthrough. The card lives at the well-known path under this base.
-A2A_BASE = (
-    f"https://{LOCATION}-aiplatform.googleapis.com/reasoningEngines/v1/"
-    f"{RESOURCE}/api/a2a/{AGENT_DIRECTORY}"
-)
+if AGENT_URL:
+    A2A_BASE = AGENT_URL.rstrip("/")
+else:
+    LOCATION = RESOURCE.split("/locations/")[1].split("/")[0]
+    A2A_BASE = (
+        f"https://{LOCATION}-aiplatform.googleapis.com/reasoningEngines/v1/"
+        f"{RESOURCE}/api/a2a/{AGENT_DIRECTORY}"
+    )
+
 A2A_CARD_URL = f"{A2A_BASE}/.well-known/agent-card.json"
 
 # The agent tags its A2UI data parts with this mime type.

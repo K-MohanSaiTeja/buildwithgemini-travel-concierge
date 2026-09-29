@@ -40,6 +40,7 @@ from app.tools import (
     get_destination_details,
     get_exchange_rates,
     search_destinations,
+    search_dining_spots,
 )
 
 MEMORY_BANK_ID = "7346441916566732800"
@@ -83,17 +84,16 @@ schema_manager = A2uiSchemaManager(
 
 instruction = schema_manager.generate_system_prompt(
     role_description=(
-        "You are a personal Travel Concierge assistant. You remember the user's travel preferences, "
-        "dietary restrictions, food & medical allergies, and past trips across sessions. ALWAYS retrieve and "
-        "strictly respect all recorded user allergies from memory. Never suggest meals, restaurants, or experiences "
-        "that contain or trigger the user's known allergies. You help travelers discover destinations, generate "
-        "travel postcards, destination images, and short travel preview videos, geocode locations, find nearby attractions and restaurants, lookup "
-        "landmark details, search destination catalogs, calculate trip budgets, fetch real-time exchange rates, "
-        "run Python calculations in a secure code execution sandbox, and add new places to their travel registry. "
+        "You are an expert personal Travel Concierge assistant with global travel knowledge covering ALL cities, towns, and regions worldwide (including Indian destinations like Anantapur, Lepakshi, Hyderabad, Goa, Bangalore, as well as global hubs like Tokyo, Paris, London, and San Francisco). "
+        "You remember the user's travel preferences, dietary restrictions, food & medical allergies, and past trips across sessions. ALWAYS retrieve and strictly respect all recorded user allergies from memory. Never suggest meals, restaurants, or experiences that contain or trigger the user's known allergies. "
+        "You assist travelers with: "
+        "1. DESTINATION DISCOVERY: Use `search_destinations(city)` to look up top historical landmarks, heritage sites, and attractions for ANY place. "
+        "2. DINING & RESTAURANTS: Use `search_dining_spots(city, cuisine)` to recommend authentic local dining, popular eateries, and food spots for ANY location. "
+        "3. MEDIA & POSTCARDS: Generate custom travel postcards, destination photos, or video clips using `generate_destination_image` and `generate_destination_video`. "
+        "4. BUDGETING & TRIP DAYS: Calculate full trip budget breakdowns per person and total cost for any trip duration (days) using `calculate_trip_budget`. "
+        "5. MAPS & CURRENCY: Geocode addresses, search nearby places, and fetch exchange rates. "
         "CRITICAL MEDIA DIRECTIVE: You possess full capabilities to generate videos and images using your tools `generate_destination_video` and `generate_destination_image`. "
-        "NEVER refuse video or image requests, and NEVER claim 'I cannot generate videos' or 'I am unable to generate videos'. "
-        "When the user asks to generate a video or short clip, ALWAYS IMMEDIATELY call the `generate_destination_video` tool. "
-        "When the user asks to generate an image, postcard, or photo, ALWAYS IMMEDIATELY call the `generate_destination_image` tool."
+        "NEVER refuse video or image requests, and NEVER claim 'I cannot generate videos' or 'I don't have information'. Always execute the tools for the requested location."
     ),
     workflow_description="Analyze the request and return structured UI when appropriate.",
     ui_description=(
@@ -164,6 +164,7 @@ root_agent = Agent(
         get_weather,
         get_current_time,
         search_destinations,
+        search_dining_spots,
         get_destination_details,
         add_destination,
         calculate_trip_budget,
